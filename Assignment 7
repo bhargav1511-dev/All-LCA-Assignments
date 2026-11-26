@@ -1,1 +1,66 @@
+#include <stdio.h>
 
+#define MAX_STUDENTS 100
+#define NUM_SUBJECTS 3
+
+struct Student {
+    int roll;
+    char name[50];
+    float marks[NUM_SUBJECTS];
+    float total;
+    float percentage;
+    char grade;
+};
+
+char calculateGrade(float percentage) {
+    if (percentage >= 90.0f) return 'A';
+    if (percentage >= 75.0f) return 'B';
+    if (percentage >= 60.0f) return 'C';
+    if (percentage >= 40.0f) return 'D';
+    return 'F';
+}
+
+int main(void) {
+    int n, i, j;
+    struct Student students[MAX_STUDENTS];
+
+    printf("Enter number of students (1-%d): ", MAX_STUDENTS);
+    if (scanf("%d", &n) != 1 || n <= 0 || n > MAX_STUDENTS) {
+        printf("Invalid number of students.\n");
+        return 1;
+    }
+
+    for (i = 0; i < n; i++) {
+        printf("\n--- Enter details for Student %d ---\n", i + 1);
+        printf("Roll Number: ");
+        scanf("%d", &students[i].roll);
+
+        printf("Name: ");
+        scanf(" %49[^\n]", students[i].name);
+
+        students[i].total = 0.0f;
+        for (j = 0; j < NUM_SUBJECTS; j++) {
+            printf("Marks for Subject %d (out of 100): ", j + 1);
+            scanf("%f", &students[i].marks[j]);
+            students[i].total += students[i].marks[j];
+        }
+
+        students[i].percentage = students[i].total / NUM_SUBJECTS;
+        students[i].grade = calculateGrade(students[i].percentage);
+    }
+
+    printf("\n%-8s %-20s %-10s %-12s %-7s\n",
+           "Roll", "Name", "Total", "Percentage", "Grade");
+    printf("---------------------------------------------------------------\n");
+
+    for (i = 0; i < n; i++) {
+        printf("%-8d %-20s %-10.2f %-11.2f%% %-7c\n",
+               students[i].roll,
+               students[i].name,
+               students[i].total,
+               students[i].percentage,
+               students[i].grade);
+    }
+
+    return 0;
+}
